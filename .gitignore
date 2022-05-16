@@ -5,3 +5,6 @@ __pycache__
 # Nodejs
 node_modules
 
+# Other
+
+.DS_Store
