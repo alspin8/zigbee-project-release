@@ -1,27 +1,33 @@
 import csv
+import itertools
 from termcolor import colored
 import os
 
 class Stockage:
 
-    __fieldnames = ['date', 'heure', 'adrr','data']
+    def __init__(self, dir, headers:list, filename="data.csv"):
+        self.path = f"{dir}/{filename}"
+        self.fieldnames = headers
+        try: 
+            with open(self.path) : pass
+        except IOError:
+            self.initfile()
 
-    def __init__(self, filenames = []):
-        for filename in filenames:
-            try: 
-                with open(f"../data/{filename}") : pass
-            except IOError:
-                self.initfile(filename)
-
-    def initfile(self, filename):
-        with open(f"../data/{filename}",'w',newline= '') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=self.__fieldnames)
+    def initfile(self):
+        with open(self.path,'w',newline= '') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames)
             writer.writeheader()
 
-    def writefile(self, filename, date, heure, adrr, data):
-        with open(f"../../data/{filename}",'a',newline= '') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=self.__fieldnames, extrasaction='raise')
-            try:
-                writer.writerow({'date' : date, 'heure': heure, 'adrr': adrr, 'data': data})
-            except ValueError as exc :
-                raise ValueError(exc)
+    def writefile(self, data:list):
+        if len(data) == len(self.fieldnames):
+            to_write:dict
+            with open(self.path,'a',newline= '') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames, extrasaction='raise')
+                for header, dt in itertools.zip_longest(self.fieldnames, data):
+                    to_write[header] = dt
+                try:
+                    writer.writerow(to_write)
+                except ValueError as exc :
+                    raise ValueError(exc)
+        else:
+            raise exc from Exception('Inconsistent data')
