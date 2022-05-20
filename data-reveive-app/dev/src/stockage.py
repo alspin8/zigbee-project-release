@@ -1,7 +1,5 @@
 import csv
 import itertools
-from termcolor import colored
-import os
 
 class Stockage:
 
@@ -20,7 +18,7 @@ class Stockage:
 
     def writefile(self, data:list):
         if len(data) == len(self.fieldnames):
-            to_write:dict
+            to_write = {}
             with open(self.path,'a',newline= '') as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames, extrasaction='raise')
                 for header, dt in itertools.zip_longest(self.fieldnames, data):
