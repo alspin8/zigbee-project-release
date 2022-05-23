@@ -38,7 +38,7 @@ const DataTable = () => {
                     header: true,
                     skipEmptyLines: true,
                     complete: result => {
-                        setData(result.data)
+                        setData(result.data.reverse())
                     }
                 });
             });
